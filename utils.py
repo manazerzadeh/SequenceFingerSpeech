@@ -12,6 +12,7 @@ import pingouin as pg
 import statsmodels.api as sm
 from statsmodels.formula.api import ols
 from statsmodels.stats.anova import AnovaRM
+import itertools
 
 
 from natsort import index_natsorted
@@ -30,6 +31,41 @@ g_sequences = {}
 
 g_sequences[0] = ['13524232514' ,'54231251343',  '15423241351', '42531451342'] #Group 1 sequences
 g_sequences[1] = ['15423241351', '42531451342', '13524232514' ,'54231251343'] #Group 2 sequences
+
+g_sequences[0] = ['13524232514' ,'54231251343',  '15423241351', '42531451342'] #Group 1 sequences
+g_sequences[1] = ['15423241351', '42531451342', '13524232514' ,'54231251343'] #Group 2 sequences
+g_sequences[2] = ['54231251343' ,'13524232514',  '15423241351', '42531451342'] # Group 3 sequences
+
+g_sequences[0] = ['13524232514' ,'54231251343',  '15423241351', '42531451342'] #Group 1 sequences
+g_sequences[1] = ['15423241351', '42531451342', '13524232514' ,'54231251343'] #Group 2 sequences
+g_sequences[2] = ['54231251343' ,'13524232514',  '15423241351', '42531451342'] # Group 3 sequences
+
+sequences = ['13524232514' ,'54231251343',  '15423241351', '42531451342']
+# generate all possible permutations of the 4 sequences
+# while treating swaps of the last two positions as the same permutation
+all_perms = itertools.permutations(sequences, 4)
+
+unique_perms = []
+seen = set()
+
+g_sequences_seen = set()
+for g_sequence in g_sequences.values():
+    key = tuple(g_sequence[:2]) + tuple(sorted(g_sequence[2:]))  # ignore order of last two
+    g_sequences_seen.add(key)
+
+for perm in all_perms:
+    key = perm[:2] + tuple(sorted(perm[2:]))  # ignore order of last two
+    if key not in seen and key not in g_sequences_seen:
+        seen.add(key)
+        unique_perms.append(perm)
+
+
+### add g_sequences as the first three elements of unique_perms
+unique_perms = list(g_sequences.values()) + unique_perms
+
+# print(f"Total unique permutations: {len(unique_perms)}")
+# for p in unique_perms:
+#     print(p)
 
 pre_test_blocks = [2,3,4]
 post_test_blocks = [11, 12, 13]
@@ -56,6 +92,13 @@ def read_dat_files_subjs_list(subjs_list: List[int]):
     Reads the corresponding dat files of subjects and converts them to a list of dataframes.
     """
     return [read_dat_file(path + "_" + str(sub) + ".dat") for sub in subjs_list]
+
+
+def read_dat_files_subjs_list_speech(subjs_list: List[int]):
+    """
+    Reads the corresponding dat files of subjects and converts them to a list of dataframes.
+    """
+    return [read_dat_file(path + "_" + str(sub) + "_sp.dat") for sub in subjs_list]
 
 
 
@@ -102,7 +145,8 @@ def add_trained_transfer_untrained_flag(row: pd.Series) -> int:
     seq = row['cue']
     effector = row['effector']
     # get the index of the sequence in the group sequences
-    seq_index = g_sequences[group].index(seq)
+    # seq_index = g_sequences[group].index(seq)
+    seq_index = unique_perms[group].index(seq)
     if seq_index == 0:
         if effector == 0:
             return 'trained'
