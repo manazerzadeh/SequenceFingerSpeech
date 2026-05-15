@@ -14,11 +14,38 @@ from statsmodels.formula.api import ols
 from statsmodels.stats.anova import AnovaRM
 import itertools
 
+from pathlib import Path
+import os
+
 
 from natsort import index_natsorted
 
-path = "./SFS2/SequenceFingerSpeech"
-path_misc = "./SFS2_miscs/"
+# path = "./SFS2/SequenceFingerSpeech"
+# path_misc = "./SFS2_miscs/"
+
+# path = r"Y:\data\SequenceFingerSpeech\raw\SFS2\SequenceFingerSpeech"
+
+repo_root = Path(__file__).resolve().parent
+
+# possible ROOTS (not full dataset path yet)
+candidates = [
+    repo_root / "SFS2",
+    Path(r"Y:\data\SequenceFingerSpeech\raw\SFS2"),
+]
+
+base_root = next((p for p in candidates if p.exists()), None)
+
+if base_root is None:
+    raise FileNotFoundError("SFS2 root not found")
+
+# now append dataset folder once
+path = base_root / "SequenceFingerSpeech"
+path_misc = base_root / "SFS2_miscs"
+
+# optional: convert to string if you need it
+path = str(path)
+path_misc = str(path_misc)
+
 
 seq_length = 11
 
@@ -71,7 +98,7 @@ def read_dat_files_subjs_list_speech(subjs_list: List[int]):
     """
     Reads the corresponding dat files of subjects and converts them to a list of dataframes.
     """
-    return [read_dat_file(path + "_" + str(sub) + "_sp.dat") for sub in subjs_list]
+    return [read_dat_file(path + "SequenceFingerSpeech_" + str(sub) + "_sp.dat") for sub in subjs_list]
 
 
 
