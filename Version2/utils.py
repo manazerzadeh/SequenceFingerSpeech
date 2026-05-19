@@ -68,8 +68,8 @@ for perm in all_perms:
         seen.add(key)
         unique_perms.append(perm)
 
-pre_test_blocks = [2,3,4]
-post_test_blocks = [11, 12, 13]
+pre_test_blocks = [2,3,4, 14, 15, 16]
+post_test_blocks = [11, 12, 13, 23, 24, 25]
 
 iti = 3000   #Inter trial interval
 precue_time = 2000 #Time between precue and go cue
