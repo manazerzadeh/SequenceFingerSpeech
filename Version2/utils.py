@@ -145,8 +145,7 @@ def error_rate_per_block(trials: pd.DataFrame, effector: str) -> pd.DataFrame:
 def per_test_phase(trials: pd.DataFrame, effector: str, measure: str = "ET") -> pd.DataFrame:
     """Median `measure` of correct trials per subject x day x test phase x condition.
 
-    Trials are pooled directly within each test phase (all 3 blocks together),
-    not first summarised per block and then averaged across blocks.
+    All trials of a test phase (its 3 blocks) are pooled.
     """
     correct = trials[
         (trials["effector_name"] == effector)

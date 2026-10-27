@@ -28,5 +28,5 @@ Effector codes in the `.dat` files: 0 = speech, 2 = right hand.
 ## Analysis notes
 
 - Measure: execution time `ET` of correct trials.
-- Pre/post-test values are the median over all trials of a test phase for each subject and condition (trials are pooled directly, not per block first).
+- Pre/post-test values are the median over all trials of a test phase (its 3 blocks pooled) for each subject and condition.
 - Learning tests: paired t-tests on the post − pre change of trained − untrained (specific) and transfer − untrained (transfer), for day 1, day 2 and day 1 pre → day 2 post.
