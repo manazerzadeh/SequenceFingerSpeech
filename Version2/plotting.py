@@ -93,3 +93,20 @@ def plot_prepost(prepost, y, effector, ylabel=None):
     g.legend.set_title("Condition")
     g.figure.suptitle(f"{EFFECTOR_TITLES[effector]} performance", y=1.05)
     return g
+
+
+def plot_timing_comparison(comparison):
+    """Keypress vs labelled ET for each trial, one panel per subject, with the identity line."""
+    subjects = sorted(comparison["SubNum"].unique())
+    fig, axes = plt.subplots(1, len(subjects), figsize=(4 * len(subjects), 4), sharex=True, sharey=True)
+    axes = [axes] if len(subjects) == 1 else axes
+    lims = [comparison[["ET_labelled", "ET_keypress"]].min().min(), comparison[["ET_labelled", "ET_keypress"]].max().max()]
+    for ax, sub in zip(axes, subjects):
+        sub_df = comparison[comparison["SubNum"] == sub]
+        sns.scatterplot(data=sub_df, x="ET_labelled", y="ET_keypress", hue="condition",
+                        hue_order=utils.CONDITION_ORDER, s=12, ax=ax, legend=ax is axes[-1])
+        ax.plot(lims, lims, color="gray", linestyle="--", linewidth=0.75)
+        ax.set(title=f"Subject {sub}", xlabel="Labelled ET (ms)", ylabel="Keypress ET (ms)", aspect="equal")
+        sns.despine(ax=ax)
+    _relabel_legend(axes[-1])
+    return fig

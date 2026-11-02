@@ -13,11 +13,16 @@ Each subject gets 6 sequences: 2 trained with speech, 2 trained with the right h
 
 Effector codes in the `.dat` files: 0 = speech, 2 = right hand.
 
+## Speech timing
+
+- *Keypress*: in the raw `.dat` files, speech `ET` is when the experimenter pressed a key to end the trial.
+- *Labelled*: `SFS2/speech_processed/sub-XX_full.tsv` hold syllable onsets and offsets labelled by hand in the audio (made with `SpeechPreprocess/preprocess_speech.ipynb`). In these files `RT`, `ET` and `MT` are in seconds from the go tone and `pressTime1..11` are syllable durations; `utils.read_labelled_speech` converts them to ms.
+
 ## Files
 
 | File | Purpose |
 |------|---------|
-| `Analysis.ipynb` | Main analysis: block time courses, pre/post-tests and learning statistics for speech and hand |
+| `Analysis.ipynb` | Main analysis: block time courses, pre/post-tests and learning statistics for speech and hand, and labelled vs keypress speech timing |
 | `TargetFileMaker.ipynb` | Builds the balanced group assignments and the `.tgt` target files for the experiment |
 | `utils.py` | Data loading, trial labelling (condition, phase, day), summaries and t-tests |
 | `plotting.py` | Figure style and plotting functions |
@@ -27,6 +32,6 @@ Effector codes in the `.dat` files: 0 = speech, 2 = right hand.
 
 ## Analysis notes
 
-- Measure: execution time `ET` of correct trials.
+- Measure: execution time `ET` of correct trials. Speech trials whose keypress reaches the 5000 ms trial limit are flagged `timeout` (not errors). Labelled trials with fewer than 11 syllables (`incompleteSyllables`) count as errors in the labelled analysis.
 - Pre/post-test values are the median over all trials of a test phase (its 3 blocks pooled) for each subject and condition.
 - Learning tests: paired t-tests on the post − pre change of trained − untrained (specific) and transfer − untrained (transfer), for day 1, day 2 and day 1 pre → day 2 post.
